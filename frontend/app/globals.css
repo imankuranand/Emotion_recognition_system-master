@@ -1,0 +1,287 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — "clean sci-fi": deep navy/black surfaces, cyan + electric
+   blue accents, restrained glassmorphism.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-ink: #05080f;
+  --color-abyss: #070d1a;
+  --color-surface: #0b1324;
+  --color-panel: #0e1830;
+  --color-line: rgba(148, 163, 184, 0.14);
+  --color-line-strong: rgba(148, 163, 184, 0.28);
+  --color-accent: #22d3ee;
+  --color-electric: #3b82f6;
+  --color-frost: #e8f1ff;
+  --color-muted: #93a7c4;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space), var(--font-inter), ui-sans-serif, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-frost);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Layered ambient background: two soft glows over a navy-to-black gradient */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(1000px 560px at 72% -12%, rgba(34, 211, 238, 0.1), transparent 62%),
+    radial-gradient(760px 620px at 8% 26%, rgba(59, 130, 246, 0.09), transparent 58%),
+    linear-gradient(180deg, #05080f 0%, #070d1a 55%, #05080f 100%);
+}
+
+/* Faint technical grid, faded out at the edges */
+.grid-surface {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 35%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 35%, transparent 78%);
+}
+
+/* Glassmorphic panel used for cards and side rails */
+.glass {
+  background: linear-gradient(165deg, rgba(18, 32, 58, 0.66), rgba(9, 16, 32, 0.54));
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: linear-gradient(165deg, rgba(20, 36, 66, 0.86), rgba(10, 18, 36, 0.78));
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Hairline top glow for key panels */
+.panel-glow {
+  position: relative;
+  overflow: hidden;
+}
+.panel-glow::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.55), transparent);
+  opacity: 0.65;
+}
+
+.text-gradient {
+  background: linear-gradient(96deg, #e8f1ff 0%, #7ddffc 48%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.label-chip {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Buttons — shared component layer (also used by error/not-found/docs pages)
+--------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-ink),
+    0 0 0 4px rgba(34, 211, 238, 0.55);
+}
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-abyss);
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #ffffff;
+  box-shadow: 0 0 28px rgba(34, 211, 238, 0.35);
+}
+
+.btn-ghost {
+  border-color: var(--color-line);
+  color: rgba(232, 241, 255, 0.9);
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: rgba(34, 211, 238, 0.5);
+  color: var(--color-accent);
+}
+
+.btn-danger {
+  background-color: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.5);
+  color: var(--color-danger);
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: rgba(248, 113, 113, 0.2);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+/* Vertical rhythm helpers */
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.stack-md {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.stack-lg {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.32) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   Micro-interactions — subtle, purposeful
+--------------------------------------------------------------------------- */
+@keyframes scan-line {
+  0% {
+    transform: translateY(-6%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(560%);
+    opacity: 0;
+  }
+}
+.animate-scan {
+  animation: scan-line 3.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ticker {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-ticker {
+  animation: ticker 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
